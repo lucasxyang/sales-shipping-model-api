@@ -18,3 +18,15 @@
 !/tmp/.keep
 
 .byebug_history
+
+# Ignore pow environment settings
+.powenv
+
+
+# macOS specific
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
