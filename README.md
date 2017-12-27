@@ -32,7 +32,7 @@ For example Tom's order of 10 apples and 2 steaks may be made up by 2 order line
 I have made an ER diagram to illustrate this better. See /material/ER_Diagram.jpg for more detail.
 
 * Story 3  
-The SQL query can be found at material/Story3.sql. 
+The SQL query can be found at material/Story3.sql. I **assume** all records determined by customer+category combination need to be returned.
 
 * Story 4  
 I  **assume** this is not meant to be an API endpoint or Ruby method when the brief says "part of a function in the application". To get the result of Story 3, simply run `rails console` 
