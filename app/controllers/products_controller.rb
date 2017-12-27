@@ -1,3 +1,4 @@
+#require 'csv'
 class ProductsController < ApplicationController
 	before_action :set_product, only: [:show, :update, :destroy]
 
@@ -32,22 +33,22 @@ class ProductsController < ApplicationController
 
 
 	# custom actions
+
+=begin
 	def action_1
 		#@products = Product.where("'name' like 'prod%'")
 		@products1 = Product.where(created_at: (Time.now - 20.minute)..Time.now)
 		puts @products1
 
-=begin
 		puts params.class
 		puts 123
-
-
 		#puts @products1.map(&:attributes)
 		#@products1.to_yaml
 		#puts @products1
-=end
 
 	end
+=end
+
 
 	def action_2
 		puts params
@@ -58,16 +59,12 @@ class ProductsController < ApplicationController
 		@start = params[:start]
 		@finish = params[:finish]
 		@length = params[:period]
+		lengthIsValid = false
 		puts @start
 		puts @finish
 		puts @length
 
-
 		#@products1 = Product.find_by_sql('SELECT "products"."id" AS "product_id", "name", strftime("%W", documents.created_at) AS "week_num", SUM(document_lines.qty) AS "qty_sum" FROM "products" INNER JOIN "document_lines" ON "document_lines"."product_id" = "products"."id" INNER JOIN "documents" ON "documents"."id" = "document_lines"."document_id" GROUP BY "products"."id", "products"."name", "week_num" ORDER by "week_num"')
-
-		#@products3 = Product.joins(:document_lines => :document).select('products.id, products.name, strftime("%W", documents.created_at) AS "week_num", SUM(document_lines.qty) AS "qty_sum" ')
-		#puts @products3.to_json
-		#puts 222
 
 		#puts @products1.class 
 		#Product::ActiveRecord_Relation
@@ -82,28 +79,34 @@ class ProductsController < ApplicationController
 
 		# products4 is based on products1 with different SQLite period groupers: j for day, W for week, and m for month
 		if @length == 'day'
+			lengthIsValid = true
 			products4 = Product.find_by_sql('SELECT "products"."id" AS "product_id", "name", strftime("%j", documents.created_at) AS "day_num", SUM(document_lines.qty) AS "qty_sum" FROM "products" INNER JOIN "document_lines" ON "document_lines"."product_id" = "products"."id" INNER JOIN "documents" ON "documents"."id" = "document_lines"."document_id" GROUP BY "products"."id", "products"."name", "day_num" ORDER by "day_num"')
 		elsif @length == 'week'
+			lengthIsValid = true
 			products4 = Product.find_by_sql('SELECT "products"."id" AS "product_id", "name", strftime("%W", documents.created_at) AS "week_num", SUM(document_lines.qty) AS "qty_sum" FROM "products" INNER JOIN "document_lines" ON "document_lines"."product_id" = "products"."id" INNER JOIN "documents" ON "documents"."id" = "document_lines"."document_id" GROUP BY "products"."id", "products"."name", "week_num" ORDER by "week_num"')
 		elsif @length == 'month'
+			lengthIsValid = true
 			products4 = Product.find_by_sql('SELECT "products"."id" AS "product_id", "name", strftime("%m", documents.created_at) AS "month_num", SUM(document_lines.qty) AS "qty_sum" FROM "products" INNER JOIN "document_lines" ON "document_lines"."product_id" = "products"."id" INNER JOIN "documents" ON "documents"."id" = "document_lines"."document_id" GROUP BY "products"."id", "products"."name", "month_num" ORDER by "month_num"')
 		else
 			# error handling
 		end
 
+
 		# output to CSV
-=begin
-		respond_to do |format|
-			format.html
-			format.csv { send_data products4.to_csv }
+		if lengthIsValid
+			CSV::open("test/file.csv", "wb") do |csv|
+				#csv << products4.first.attributes.delete_if { |k, v| v.nil? }.keys # adds the attributes name on the first line as headers
+				csv << ["product_name", "product_id", "period_num", "qty_sum"]
+
+	      		products4.each do |productHash|
+	      			puts productHash.class
+	      			tempLine = productHash.attributes.delete_if { |k, v| v.nil? } # Ruby Enumerator (productHash.attributes) gives an array with nil "id" field. I do not want it
+	      			puts tempLine
+			        csv << tempLine.values
+				end
+			end
 		end
 
-		respond_to do |format|
-			format.html
-			format.csv { send_data products4.to_csv, filename: "tetetest.csv" }
-		end
-=end
-		#format.csv { send_data products4.to_csv, filename: "tetetest.csv" }
 		var1 = products4.to_json
 		json_response(var1)
 
