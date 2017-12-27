@@ -20,9 +20,6 @@ Run `rake db:setup` first. I **assume** using SQLite3 as database for Active Rec
 * How to run the test suite  
 Run `bundle exec rspec`. 
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
 
 
 ### Tasks
