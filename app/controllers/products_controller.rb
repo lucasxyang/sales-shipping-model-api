@@ -94,7 +94,7 @@ class ProductsController < ApplicationController
 
 		# output to CSV
 		if lengthIsValid
-			CSV::open("test/file.csv", "wb") do |csv|
+			CSV::open("material/file.csv", "wb") do |csv|
 				#csv << products4.first.attributes.delete_if { |k, v| v.nil? }.keys # adds the attributes name on the first line as headers
 				csv << ["product_name", "product_id", "period_num", "qty_sum"]
 

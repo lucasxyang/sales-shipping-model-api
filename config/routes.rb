@@ -9,8 +9,8 @@ Rails.application.routes.draw do
   	resources :document_lines
   end
 
-  get 'products/action_1' => 'products/action_1'
-  post 'products/action_2' => 'products/action_2'
+  get 'products/action_2' => 'products/action_2'
+  #post 'products/action_2' => 'products/action_2'
 
   resources :products
   resources :categories
