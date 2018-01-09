@@ -1,0 +1,9 @@
+product_name,product_id,period_num,qty_sum
+water,5,11,10
+lumber,6,11,11
+helium,7,11,12
+rice,8,11,18
+water,5,12,13
+lumber,6,12,14
+helium,7,12,15
+ski pass,10,12,5
